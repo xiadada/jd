@@ -1,0 +1,40 @@
+{
+    "data": {
+        "headSlideImg": [
+            {
+                "url": "assets/images/index/slide/slide_pic1.png"
+            },
+            {
+                "url": "assets/images/index/slide/slide_pic2.png"
+            },
+            {
+                "url": "assets/images/index/slide/slide_pic3.png"
+            },
+            {
+                "url": "assets/images/index/slide/slide_pic4.png"
+            },
+            {
+                "url": "assets/images/index/slide/slide_pic5.png"
+            }
+        ],
+        "twoImgSelect": [
+            {
+                "href": "//global.jd.com",
+                "url": "assets/images/index/header_slide_extend1.png"
+            },
+            {
+                "href": "//gehu.jd.com/",
+                "url": "assets/images/index/header_slide_extend2.png"
+            }
+        ]
+    },
+    "meta": {
+        "status": "200",
+        "message": "ok"
+    },
+    "page": {
+        "pageNo": 1,
+        "totalPage": 1,
+        "pageSize": 1
+    }
+}

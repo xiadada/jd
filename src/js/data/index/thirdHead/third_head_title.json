@@ -1,0 +1,87 @@
+{
+    "data": {
+        "hotSearch": {
+            "text": "蓝牙鼠标",
+            "url": "123"
+        },
+        "searchDaoHang": [
+            {
+                "text": "洗衣机节"
+            },
+            {
+                "text": "女神特刊"
+            },
+            {
+                "text": "园艺工具"
+            },
+            {
+                "text": "羽绒服男"
+            },
+            {
+                "text": "聚宝盆"
+            },
+            {
+                "text": "飞科剃须刀"
+            },
+            {
+                "text": "天然气灶双灶"
+            },
+            {
+                "text": "券后一元"
+            }
+        ],
+        "typeSelectItems": [
+            [
+                {
+                    "text": "秒杀",
+                    "url": "//miaosha.jd.com/"
+                },
+                {
+                    "text": "优惠券",
+                    "url": "//a.jd.com/"
+                },
+                {
+                    "text": "闪购",
+                    "url": "//red.jd.com/"
+                },
+                {
+                    "text": "拍卖",
+                    "url": "//paimai.jd.com/"
+                }
+            ],
+            [
+                {
+                    "text": "京东服饰",
+                    "url": "//channel.jd.com/fashion.html"
+                },
+                {
+                    "text": "京东超市",
+                    "url": "//chaoshi.jd.com/"
+                },
+                {
+                    "text": "生鲜",
+                    "url": "//fresh.jd.com/"
+                },
+                {
+                    "text": "全球购",
+                    "url": "//www.jd.hk/"
+                }
+            ],
+            [
+                {
+                    "text": "京东金融",
+                    "url": "//jr.jd.com/"
+                }
+            ]
+        ]
+    },
+    "meta": {
+        "status": "200",
+        "message": "ok"
+    },
+    "page": {
+        "pageNo": 1,
+        "totalPage": 1,
+        "pageSize": 1
+    }
+}

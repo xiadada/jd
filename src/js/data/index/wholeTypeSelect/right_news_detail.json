@@ -1,0 +1,113 @@
+{
+    "data": {
+        "discountNews": [
+            {
+                "href": "//sale.jd.com/act/oCYWHIRfan.html",
+                "text": "居家好物暖暖季跨店3件7折"
+            },
+            {
+                "href": "//sale.jd.com/act/GiyAh4JaRXbPul.html",
+                "text": "灯具五金12.12好物钜惠"
+            },
+            {
+                "href": "//sale.jd.com/act/zAe3Xr1ipvCt.html",
+                "text": "智能黑科技5折神券来袭！"
+            },
+            {
+                "href": "//trip.jd.com/",
+                "text": "每日享折扣 京东品质游"
+            }
+        ],
+        "noticeNews": [
+            {
+                "href": "//www.jd.com/news.aspx?id=36083",
+                "text": "关于召回普利司通（天津）轮胎有限公司2个规格乘用车轮胎的公告"
+            },
+            {
+                "href": "//www.jd.com/news.aspx?id=35887",
+                "text": "京东物流推出配送员统一外呼电话“95056”"
+            },
+            {
+                "href": "//www.jd.com/news.aspx?id=35772",
+                "text": "天府大件运营中心开仓公告"
+            },
+            {
+                "href": "//www.jd.com/news.aspx?id=35569",
+                "text": "京东大件物流“送装一体”服务全面升级"
+            }
+        ],
+        "playItem": [
+            {
+                "href": "//chongzhi.jd.com/",
+                "playItemIcon": "0 -88px;",
+                "playItemDescribe": "话费"
+            },
+            {
+                "href": "//jipiao.jd.com/",
+                "playItemIcon": "0 -44px;",
+                "playItemDescribe": "机票",
+                "discountIcon": "减"
+            },
+            {
+                "href": "//hotel.jd.com/",
+                "playItemIcon": "-44px -88px;",
+                "playItemDescribe": "酒店",
+                "discountIcon": "降"
+            },
+            {
+                "href": "//train.jd.com/",
+                "playItemIcon": "-88px -88px;",
+                "playItemDescribe": "火车票"
+            },
+            {
+                "href": "//b.jd.com/",
+                "playItemIcon": "-88px -44px;",
+                "playItemDescribe": "企业购"
+            },
+            {
+                "href": "//jiayouka.jd.com/",
+                "playItemIcon": "0 0;",
+                "playItemDescribe": "加油卡"
+            },
+            {
+                "href": "//movie.jd.com/index.html",
+                "playItemIcon": "-44px -44px;",
+                "playItemDescribe": "电影票"
+            },
+            {
+                "href": "//game.jd.com/",
+                "playItemIcon": "-88px 0",
+                "playItemDescribe": "游戏"
+            },
+            {
+                "href": "//z.jd.com/sceneIndex.html?from=jrscyn_20162",
+                "playItemIcon": "-132px 0;",
+                "playItemDescribe": "众筹"
+            },
+            {
+                "href": "//licai.jd.com/?from=jrscyn_20161",
+                "playItemIcon": "-132px -44px;",
+                "playItemDescribe": "理财"
+            },
+            {
+                "href": "//o.jd.com/market/index.action",
+                "playItemIcon": "-132px -88px;",
+                "playItemDescribe": "礼品卡"
+            },
+            {
+                "href": "//baitiao.jd.com/?from=jrscyn_20160",
+                "playItemIcon": "-44px 0",
+                "playItemDescribe": "白条"
+            }
+        ]
+    },
+    "meta": {
+        "status": "200",
+        "message": "ok"
+    },
+    "page": {
+        "pageNo": 1,
+        "totalPage": 1,
+        "pageSize": 1
+    }
+}
