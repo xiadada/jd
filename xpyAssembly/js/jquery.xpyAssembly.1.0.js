@@ -651,7 +651,7 @@ function openAssociativeSearch(elem, param){
 									'<div class="xpy-associative-camera">'+
 										'<input type="file" title="未选择任何文件">'+
 									'</div>'+
-									'<div class="xpy-associative-search-icon">'+options.searchIcon+'</div>'+
+									'<div class="xpy-associative-search-icon"></div>'+
 									'<ul class="xpy-associative-search-result"></ul>'+
 								'</div>'
 	$(elem).append(associativeSearchHtml);

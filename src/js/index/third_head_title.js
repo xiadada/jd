@@ -13,12 +13,20 @@ define(['assets/js/common/model.js',
 					modelApp.getAllExistingData().then(function(aed){
 						if(aed.meta.status == 200){
 							var placeholderText = aed.data.hotSearch.text;
-							var allExistingData = aed.data.allExistingData;
+							// var allExistingData = aed.data.allExistingData;
 							$('.search-area').associativeSearch({
-								"data": allExistingData,
+								"data": [],
 								"cameraIcon": "/assets/images/index/header_search_camera.png",
 								"searchIcon": "/assets/images/index/header_search_btn.png",
 								"placeholder": placeholderText
+							})
+							$('input[type="text"]').on('input propertychange', function(){
+								var currentValue = $.trim($(this).val());
+								var $script = $('#jsonpScript');
+								if($script.length != 0) $script.remove();
+				
+								var scriptHtml = '<script id="jsonpScript" src="http://suggestion.baidu.com/su?wd=' + currentValue + '&cb=func&qq-pf-to=pcqq.c2c"><\/script>';
+								$(scriptHtml).appendTo('body');
 							})
 						}
 					})
@@ -38,3 +46,8 @@ define(['assets/js/common/model.js',
 	};
 	return thirdHeadTitleApp;
 })
+function func(res){
+	data = [];
+	data = res.s;
+	$('.search-area').associativeSearchFn('data',data);
+}
