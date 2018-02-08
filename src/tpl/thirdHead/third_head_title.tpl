@@ -1,12 +1,6 @@
 <div class="third-head-title-content">
 	<div class="logo"></div>
-	<div class="search-hold">
-		<input type="text" class="search" placeholder="{{$data.hotSearch.text}}">
-		<div class="camera">
-			<input type="file" title="未选择任何文件">
-		</div>
-		<div class="search-icon"></div>
-	</div>
+	<div class="search-area"></div>
 	<div class="buy-car">
 		<i class="buy-car-logo"></i>
 		<i class="buy-car-text">我的购物车</i>

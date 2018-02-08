@@ -37,6 +37,7 @@
 		}		
 	}
 	.xpy-btn{
+		display: none;
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
@@ -62,6 +63,8 @@
 		}
 	}
 }
+
+
 .xpy-slide-wrapper{
 	position: relative;
 	width: 100%;
@@ -72,14 +75,24 @@
 		position: absolute;
 		height: 100%;
 		left: 0;
+
 		.xpy-slide-img-item{
 			float: left;
 			height: 100%;
 			border-right: 1px solid #e7e7e7;
 			text-align: center;
-			img{
-				cursor: pointer;
+			.xpy-slide-img-content{
+				position: relative;
+				height: 74%;
+				img{
+					position: absolute;
+				    top: 50%;
+				    left: 50%;
+				    transform: translate(-50%, -50%);
+					cursor: pointer;
+				}
 			}
+			
 			.xpy-slide-textholder{
 				height: 26%;
 				padding: 0 14px;
@@ -95,10 +108,10 @@
     				line-height: 16px;
     				word-wrap: break-word;
     				word-break: break-all;
-					cursor: pointer;
-					&:hover{
-						color: #f10214;
-					}
+    				cursor: pointer;
+    				&:hover{
+    					color: #f10214;
+    				}
 				}
 
 				.xpy-slide-text-price{
@@ -160,6 +173,70 @@
 		}
 		&.forbidden{
 			cursor: not-allowed;
+		}
+	}
+}
+
+
+.xpy-associative-search-hold{
+	width: 100%;
+	height: 100%;
+	.xpy-associative-search{
+		position: absolute;
+		padding: 4px 50px 4px 4px;
+		left: 0;
+		width: 100%;
+		height: 36px;
+		line-height: 36px;
+		border: 1px solid #f10215;
+		font-size: 14px;
+		color: #989898;
+	}
+	.xpy-associative-search-icon{
+		position: absolute;
+		width: 50px;
+		height: 36px;
+		right: 0;
+		// background: url("../images/header_search_btn.png") center no-repeat;
+		// background-color: red;
+		border: 1px solid #f10215;
+		cursor: pointer;
+	}
+	.xpy-associative-camera{
+		position: absolute;
+		right: 65px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 20px;
+		overflow: hidden;
+		height: 16px;
+		// background: url("../images/header_search_camera.png") center no-repeat;
+		background-position: 0 0;
+		&:hover{
+			background-position: -30px 0;
+		}
+		input{
+			width: 100%;
+			height: 100%;					
+			opacity: 0;
+		}
+	}
+}
+.xpy-associative-search-result{
+	display: none;
+	position: absolute;
+	left: 0;
+	width: 550px;
+	border: 1px solid #ccc;
+	z-index: 100;
+	background-color: #fff;
+	.xpy-associative-result-item{
+		width: 100%;
+		height: 30px;
+		line-height: 30px;
+		padding-left: 10px;
+		&:hover{
+			background-color: #f6f6f6;
 		}
 	}
 }

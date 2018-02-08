@@ -1,0 +1,98 @@
+{
+    "data": {
+        "enjoyQualityContent": [
+            {
+                "rightCarouselLiveImg": [
+                    {
+                        "url": "/assets/images/index/enjoyLife/quality_list_slideshow1.png"
+                    },
+                    {
+                        "url": "/assets/images/index/enjoyLife/quality_list_slideshow2.png"
+                    },
+                    {
+                        "url": "/assets/images/index/enjoyLife/quality_list_slideshow3.png"
+                    },
+                    {
+                        "url": "/assets/images/index/enjoyLife/quality_list_slideshow4.png"
+                    },
+                    {
+                        "url": "/assets/images/index/enjoyLife/quality_list_slideshow5.png"
+                    }
+                ]
+            },
+            {
+                "index": 1,
+                "background": "#66B687",
+                "entryInfoTitle": "新品首发",
+                "entryInfoDesc": "华为新品上市 预定抽电视",
+                "imgUrl": "/assets/images/index/enjoyLife/quality_list1.png",
+                "href": "//new.jd.com/"
+            },
+            {
+                "index": 2,
+                "background": "#DBCF6E",
+                "entryInfoTitle": "会逛",
+                "entryInfoDesc": "施华洛世奇 白条12期免息",
+                "imgUrl": "/assets/images/index/enjoyLife/quality_list2.png",
+                "href": "//huiguang.jd.com/"
+            },
+            {
+                "index": 3,
+                "background": "#534b5d",
+                "entryInfoTitle": "奢侈大牌",
+                "entryInfoDesc": "尽享品质生活 ",
+                "imgUrl": "/assets/images/index/enjoyLife/quality_list3.png",
+                "href": "//shechi.jd.com/"
+            },
+            {
+                "index": 4,
+                "background": "#3b838c",
+                "entryInfoTitle": "智能生活",
+                "entryInfoDesc": "智能潮货，嗨购不停",
+                "imgUrl": "/assets/images/index/enjoyLife/quality_list4.png",
+                "href": "//znsh.jd.com/"
+            },
+            {
+                "index": 5,
+                "background": "#d58717",
+                "entryInfoTitle": "京东超市",
+                "entryInfoDesc": "精选超值好货 天天特价",
+                "imgUrl": "/assets/images/index/enjoyLife/quality_list5.png",
+                "href": "//chaoshi.jd.com/"
+            },
+            {
+                "index": 6,
+                "background": "#7e5944",
+                "entryInfoTitle": "白条商城",
+                "entryInfoDesc": "最高12期免息",
+                "imgUrl": "/assets/images/index/enjoyLife/quality_list6.png",
+                "href": "//sale.jd.com/act/u5Tx1bCHNpkKJgY.html"
+            },
+            {
+                "index": 7,
+                "background": "#a93931",
+                "entryInfoTitle": "设计师推荐",
+                "entryInfoDesc": "全球设计精选",
+                "imgUrl": "/assets/images/index/enjoyLife/quality_list_small7.png",
+                "href": "//idesign.jd.com/"
+            },
+            {
+                "index": 8,
+                "background": "#642663",
+                "entryInfoTitle": "全球尖货",
+                "entryInfoDesc": "全球自营好货",
+                "imgUrl": "/assets/images/index/enjoyLife/quality_list_small8.png",
+                "href": "//sale.jd.com/act/UiLHMz0aA3Pgn.html"
+            }
+        ]
+    },
+    "meta": {
+        "status": "200",
+        "message": "ok"
+    },
+    "page": {
+        "pageNo": 1,
+        "pageSize": 1,
+        "totalPage": 1
+    }
+}

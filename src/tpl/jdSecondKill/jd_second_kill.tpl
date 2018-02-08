@@ -11,17 +11,17 @@
 		<div class="second-kill-time">
 			<span class="now-time">当前场次</span>
 			<div class="time-hold clearfix">
-				<div class="time time-hours">00</div>
+				<div class="time time-hours">{{$data.countDownHours}}</div>
 				<div class="time-dot">
 					<i class="dot"></i>
 					<i class="dot"></i>
 				</div>
-				<div class="time time-minute">59</div>
+				<div class="time time-minute">{{$data.countDownMinutes}}</div>
 				<div class="time-dot">
 					<i class="dot"></i>
 					<i class="dot"></i>
 				</div>
-				<div class="time time-seconds">28</div>
+				<div class="time time-seconds">{{$data.countDownSecond}}</div>
 			</div>
 			<span class="now-time">后结束抢购</span>
 		</div>

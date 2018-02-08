@@ -18,11 +18,19 @@ define([],function(){
 			})
 		},
 		/*
-		*获取到搜索框中的placeholder中的文字和搜索框下面的快速搜索内容
+		*获取到搜索框下面的快速搜索内容
 		*/
 		getThirdHeadInfo: function(){
 			return $.ajax({
 				url: baseUrl + 'index/thirdHead/third_head_title.json'
+			})
+		},
+		/*
+		*获取到搜索框中的placeholder中的文字和所有已存在的搜索内容
+		*/
+		getAllExistingData: function(){
+			return $.ajax({
+				url: baseUrl + 'index/thirdHead/search_all_existing_data.json'
 			})
 		},
 		/*
@@ -55,6 +63,14 @@ define([],function(){
 		getJdSecondKillInfo: function(){
 			return $.ajax({
 				url: baseUrl + 'index/jdSecondKill/jd_second_kill.json'
+			})
+		},
+		/*
+		*获取到享品质信息
+		*/
+		getEnjoyQualityInfo: function(){
+			return $.ajax({
+				url: baseUrl + 'index/enjoyQuality/enjoy_quality.json'
 			})
 		},
 	};

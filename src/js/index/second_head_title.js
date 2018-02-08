@@ -65,7 +65,6 @@ define(['assets/js/common/model.js',
 				*/
 				$('.lala').on('mouseenter','.local-place-content',function(){
 					var currentProvinceCode = $(this).attr('data-code');
-					console.log(currentProvinceCode);
 					$(this).siblings('.all-place').find('li[data-code="'+currentProvinceCode+'"]').addClass('action').siblings().removeClass('action');
 					$(this).css({
 						'background-color': '#fff',

@@ -1,0 +1,42 @@
+{
+    "data": {
+         "hotSearch": {
+            "text": "蓝牙鼠标",
+            "url": "123"
+        },
+        "allExistingData": [{
+            "text": "苹果",
+            "value": "苹果"
+        },{
+            "text": "香蕉",
+            "value": "香蕉"
+        },{
+            "text": "香水",
+            "value": "香水"
+        },{
+            "text": "香果",
+            "value": "香果"
+        },{
+            "text": "香果果",
+            "value": "香果果"
+        },{
+            "text": "香香",
+            "value": "香香"
+        },{
+            "text": "牛奶",
+            "value": "牛奶"
+        },{
+            "text": "aa",
+            "value": "aa"
+        }]
+    },
+    "meta": {
+        "status": "200",
+        "message": "ok"
+    },
+    "page": {
+        "pageNo": 1,
+        "totalPage": 1,
+        "pageSize": 1
+    }
+}

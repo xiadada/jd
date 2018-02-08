@@ -14,6 +14,10 @@
 				'slideMove': function(param){
 					var elem = this;
 					return openSlideMove(elem, param);
+				},
+				'associativeSearch': function(param){
+					var elem = this;
+					return openAssociativeSearch(elem, param);
 				}
 			})
 		},
@@ -33,11 +37,13 @@ function openCarousel(elem, param){
 	//默认参数
 	var defaults = {
 		'data': ' ',
-		'isSkip': true,
 		'isInfinit': true,
 		'isSlide': false,
 		'isBtn': true,
-		'skipTrigger': 'hover'
+		'skipBar':{
+			'show': true,
+			'trigger': 'hover'
+		}
 	};
 	//合并参数
 	var options = $.extend(true, defaults, param);
@@ -57,7 +63,7 @@ function openCarousel(elem, param){
 	}
 	
 	//轮播总体html结构
-	if(options.isSkip == true && options.isBtn == true){
+	if(options.skipBar.show == true && options.isBtn == true){
 		var carouselHtml = '<div class="xpy-carousel-wrapper" id="carousel-'+ carouselCount +'">'+
 								'<ul class="xpy-carousel-img-hold clearfix">'+carouselMap['carousel-'+carouselCount].imgItemHtml+'</ul>'+					
 								carouselMap['carousel-'+carouselCount].circleHtml+
@@ -65,20 +71,20 @@ function openCarousel(elem, param){
 								'<div class="xpy-btn xpy-btn-left" data-orient="left"><</div>'+
 								'<div class="xpy-btn xpy-btn-right" data-orient="right">></div>'+
 							'</div>';
-	}else if(!options.isSkip && options.isBtn == true){
+	}else if(!options.skipBar.show && options.isBtn == true){
 		var carouselHtml = '<div class="xpy-carousel-wrapper">'+
 								'<ul class="xpy-carousel-img-hold clearfix">'+carouselMap['carousel-'+carouselCount].imgItemHtml+'</ul>'+
 								'<div class="xpy-btn xpy-btn-left" data-orient="left"><</div>'+
 								'<div class="xpy-btn xpy-btn-right" data-orient="right">></div>'+
 							'</div>'; 
-	}else if(options.isSkip == true && !options.isBtn){
+	}else if(options.skipBar.show == true && !options.isBtn){
 		var carouselHtml = '<div class="xpy-carousel-wrapper" id="carousel-'+ carouselCount +'">'+
 								'<ul class="xpy-carousel-img-hold clearfix">'+carouselMap['carousel-'+carouselCount].imgItemHtml+'</ul>'+					
 								carouselMap['carousel-'+carouselCount].circleHtml+
 								'</div>'+
 							'</div>';
 
-	}else if(!options.isSkip && !options.isBtn){
+	}else if(!options.skipBar.show && !options.isBtn){
 		var carouselHtml = '<div class="xpy-carousel-wrapper">'+
 								'<ul class="xpy-carousel-img-hold clearfix">'+carouselMap['carousel-'+carouselCount].imgItemHtml+'</ul>'+
 							'</div>'; 
@@ -92,57 +98,59 @@ function openCarousel(elem, param){
 	if(!options.isInfinit){
 		$(elem).find('.xpy-btn-left').addClass('forbidden');
 	}
-	if(options.isSkip){
+	if(options.skipBar.show){
 		$(elem).find('.xpy-carousel-circle span').eq(0).addClass('xpy-action');
 	}
 	//自动向右播放
 	carouselMap['carousel-'+carouselCount].timer = setInterval(function(){
-		carouselRightMove(elem,options,carouselCount);
+		rightMove(elem,options,carouselCount);
 	},options.slideTime);
 	//鼠标移入移出事件
 	$(elem).find('.xpy-carousel-wrapper').on('mouseover',function(){
 		var nowCarouselCount = $(this).attr('id').split('-')[1];
 		clearInterval(carouselMap['carousel-'+nowCarouselCount].timer);
+		$(elem).find('.xpy-btn').show();
 	});
 	$(elem).find('.xpy-carousel-wrapper').on('mouseout',function(){
 		var nowCarouselCount = $(this).attr('id').split('-')[1];
 		carouselMap['carousel-'+nowCarouselCount].timer = setInterval(function(){
-			carouselRightMove(elem,options,nowCarouselCount);
+			rightMove(elem,options,nowCarouselCount);
 		},options.slideTime);
+		$(elem).find('.xpy-btn').hide();
 	});
 
 	//左右键点击事件
 	$(elem).find('.xpy-btn-right').on('click',function(){	
 		var nowCarouselCount = $(this).closest('.xpy-carousel-wrapper').attr('id').split('-')[1];	
 		if(options.isInfinit == true){
-			carouselRightMove(elem,options,nowCarouselCount);			
+			rightMove(elem,options,nowCarouselCount);			
 		}else{
 			//为最后一张时，禁止循环轮播
 			if($(elem).find('.xpy-carousel-img-hold').css('left') == 0-$(elem).find('.xpy-carousel-img-hold').outerWidth() + $(elem).width() + 'px'){
 				return;
 			}else{
-				carouselRightMove(elem,options,nowCarouselCount);
+				rightMove(elem,options,nowCarouselCount);
 			}
 		}
 	});
 	$(elem).find('.xpy-btn-left').on('click',function(){
 		var nowCarouselCount = $(this).closest('.xpy-carousel-wrapper').attr('id').split('-')[1];
 		if(options.isInfinit == true){
-			carouselLeftMove(elem,options,nowCarouselCount);
+			leftMove(elem,options,nowCarouselCount);
 		}else if(!options.isInfinit){
 			//为第一张时禁止左轮播图片
 			if($(elem).find('.xpy-carousel-img-hold').css('left') == '0px'){
 				return;
 			}else{
-				carouselLeftMove(elem,options,nowCarouselCount);
+				leftMove(elem,options,nowCarouselCount);
 			}	
 		}					
 	});
 
 
 	//圆点hover触发形式
-	if(options.isSkip){
-		if(options.skipTrigger == 'hover'){
+	if(options.skipBar.show){
+		if(options.skipBar.trigger == 'hover'){
 		$(elem).find('.xpy-carousel-circle').on('mouseover','span',function(){
 			carouselMap['carousel-'+carouselCount].index = $(this).index();
 			if(!options.isSlide){
@@ -162,12 +170,12 @@ function openCarousel(elem, param){
 				$(elem).find('.xpy-btn-right').removeClass('forbidden');
 				$(elem).find('.xpy-btn-left').removeClass('forbidden');
 			}
-			if(options.isSkip){
+			if(options.skipBar.show){
 				$(elem).find(this).addClass('xpy-action').siblings().removeClass('xpy-action');
 			}			
 		})
 		//圆点click点击触发形式
-		}else if(options.skipTrigger == 'click'){
+		}else if(options.skipBar.trigger == 'click'){
 			$(elem).find('.xpy-carousel-circle').on('click','span',function(){
 				carouselMap['carousel-'+carouselCount].index = $(this).index();
 				if(!options.isSlide){
@@ -187,7 +195,7 @@ function openCarousel(elem, param){
 					$(elem).find('.xpy-btn-right').removeClass('forbidden');
 					$(elem).find('.xpy-btn-left').removeClass('forbidden');
 				}
-				if(options.isSkip){
+				if(options.skipBar.show){
 					$(elem).find(this).addClass('xpy-action').siblings().removeClass('xpy-action');
 				}		
 			})
@@ -195,7 +203,7 @@ function openCarousel(elem, param){
 	}	
 
 }
-function carouselRightMove(elem,param,carouselCount){
+function rightMove(elem,param,carouselCount){
 	var items = $(elem).find('.xpy-carousel-img-item');
 	var width = items.length*$(elem).width();
 	if(carouselMap['carousel-'+carouselCount].flag){
@@ -219,7 +227,7 @@ function carouselRightMove(elem,param,carouselCount){
 						$(elem).find('.xpy-btn-right').removeClass('forbidden');
 					}
 					carouselMap['carousel-'+carouselCount].index ++;
-					if(param.isSkip){
+					if(param.skipBar.show){
 						$(elem).find('.xpy-carousel-circle span').eq(carouselMap['carousel-'+carouselCount].index % carouselMap['carousel-'+carouselCount].data.length).addClass('xpy-action').siblings().removeClass('xpy-action');	
 					}
 					carouselMap['carousel-'+carouselCount].flag = true;
@@ -241,7 +249,7 @@ function carouselRightMove(elem,param,carouselCount){
 				},function(){
 					carouselMap['carousel-'+carouselCount].index ++;
 					carouselMap['carousel-'+carouselCount].index = carouselMap['carousel-'+carouselCount].index % carouselMap['carousel-'+carouselCount].data.length;
-					if(param.isSkip){
+					if(param.skipBar.show){
 						$(elem).find('.xpy-carousel-circle span').eq(carouselMap['carousel-'+carouselCount].index % carouselMap['carousel-'+carouselCount].data.length).addClass('xpy-action').siblings().removeClass('xpy-action');	
 					}
 					carouselMap['carousel-'+carouselCount].flag = true;
@@ -260,7 +268,7 @@ function carouselRightMove(elem,param,carouselCount){
 					$(elem).find('.xpy-btn-right').removeClass('forbidden');
 				}
 				carouselMap['carousel-'+carouselCount].index ++;
-				if(param.isSkip){
+				if(param.skipBar.show){
 					$(elem).find('.xpy-carousel-circle span').eq(carouselMap['carousel-'+carouselCount].index % carouselMap['carousel-'+carouselCount].data.length).addClass('xpy-action').siblings().removeClass('xpy-action');	
 				}
 				carouselMap['carousel-'+carouselCount].flag = true;
@@ -271,7 +279,7 @@ function carouselRightMove(elem,param,carouselCount){
 }
 
 
-function carouselLeftMove(elem,param,carouselCount){
+function leftMove(elem,param,carouselCount){
 	var items = $(elem).find('.xpy-carousel-img-item');
 	var width = items.length*$(elem).width();
 	if(carouselMap['carousel-'+carouselCount].flag){
@@ -299,7 +307,7 @@ function carouselLeftMove(elem,param,carouselCount){
 						$(elem).find('.xpy-btn-right').removeClass('forbidden');
 					}
 					carouselMap['carousel-'+carouselCount].index --;
-					if(param.isSkip){
+					if(param.skipBar.show){
 						$(elem).find('.xpy-carousel-circle span').eq(carouselMap['carousel-'+carouselCount].index % carouselMap['carousel-'+carouselCount].data.length).addClass('xpy-action').siblings().removeClass('xpy-action');	
 					}
 					carouselMap['carousel-'+carouselCount].flag = true;
@@ -321,7 +329,7 @@ function carouselLeftMove(elem,param,carouselCount){
 				},function(){
 					carouselMap['carousel-'+carouselCount].index --;
 					carouselMap['carousel-'+carouselCount].index = carouselMap['carousel-'+carouselCount].index % carouselMap['carousel-'+carouselCount].data.length;
-					if(param.isSkip){
+					if(param.skipBar.show){
 						$(elem).find('.xpy-carousel-circle span').eq(carouselMap['carousel-'+carouselCount].index % carouselMap['carousel-'+carouselCount].data.length).addClass('xpy-action').siblings().removeClass('xpy-action');	
 					}
 					carouselMap['carousel-'+carouselCount].flag = true;
@@ -340,7 +348,7 @@ function carouselLeftMove(elem,param,carouselCount){
 					$(elem).find('.xpy-btn-right').removeClass('forbidden');
 				}
 				carouselMap['carousel-'+carouselCount].index --;
-				if(param.isSkip){
+				if(param.skipBar.show){
 					$(elem).find('.xpy-carousel-circle span').eq(carouselMap['carousel-'+carouselCount].index % carouselMap['carousel-'+carouselCount].data.length).addClass('xpy-action').siblings().removeClass('xpy-action');	
 				}
 				carouselMap['carousel-'+carouselCount].flag = true;
@@ -365,12 +373,15 @@ function openSlideMove(elem, param){
 	var options = $.extend(true, defaults, param);
 	var SlideMoveCount = $('.xpy-slide-img-hold').length;
 	imgItemHtml = '';
+	flag = true;
 
 	//图片容器html结构
 	for(var i = 0; i < options.data.length; i++){
 		if(options.data[i].text){
 			imgItemHtml += '<li class="xpy-slide-img-item">'+
-								'<img src="'+ options.data[i].url +'">'+
+								'<div class="xpy-slide-img-content">'+
+									'<img src="'+ options.data[i].url +'">'+
+								'</div>'+
 								'<div class="xpy-slide-textholder style=height:26%">'+
 									'<div class="xpy-slide-text-title">' + options.data[i].text + '</div>'+
 									'<div class="xpy-slide-text-price">'+
@@ -379,9 +390,8 @@ function openSlideMove(elem, param){
 									'</div>'+
 								'</div>'+
 						'</li>';
-			$(elem).find('img').eq(i).css({'height': '74%'})
 		}else{
-			imgItemHtml += '<li class="xpy-slide-img-item"><img src="'+ options.data[i].url +'"></li>';
+			imgItemHtml += '<li class="xpy-slide-img-item"><div class="xpy-slide-img-content"><img src="'+ options.data[i].url +'"></div></li>';
 		}
 	}	
 	//滑动组件总体html结构
@@ -439,7 +449,6 @@ function openSlideMove(elem, param){
 		}					
 	});
 }
-var flag = true;
 function slideRightMove(elem,param,SlideMoveCount){
 	var items = $(elem).find('.xpy-slide-img-item');
 	var width = items.length*param.showImgContentWidth;
@@ -461,6 +470,8 @@ function slideRightMove(elem,param,SlideMoveCount){
 			})
 			$(elem).find('.xpy-slide-img-hold').eq(1).animate({
 				'left': parseInt($(elem).find('.xpy-slide-img-hold').eq(1).css('left')) + left
+			},function(){
+				flag = true;
 			})
 			
 		}
@@ -476,7 +487,7 @@ function slideRightMove(elem,param,SlideMoveCount){
 				$(elem).find('.xpy-slide-btn-right').removeClass('forbidden');
 			}
 			flag = true;
-		})		
+		})
 	}	
 }
 
@@ -487,7 +498,6 @@ function slideLeftMove(elem,param,SlideMoveCount){
 	var $picWrap =$(elem).find('.xpy-slide-img-hold').eq(0),
 		$picItems = $picWrap.find('.xpy-slide-img-item');
 	var left = param.slideLength*param.showImgContentWidth;
-
 	if(flag){
 		flag = false;
 		if($picWrap.css('left') == '0px'){
@@ -503,6 +513,8 @@ function slideLeftMove(elem,param,SlideMoveCount){
 			})
 			$(elem).find('.xpy-slide-img-hold').eq(1).animate({
 				'left': parseInt($(elem).find('.xpy-slide-img-hold').eq(1).css('left')) + left
+			},function(){
+				flag = true;
 			})
 			
 		}
@@ -518,7 +530,90 @@ function slideLeftMove(elem,param,SlideMoveCount){
 				$(elem).find('.xpy-slide-btn-right').removeClass('forbidden');
 			}
 			flag = true;
-		})		
-	}
+		})
+	}	
+}
+
+/*
+*渲染联想搜索框结构
+*/
+function openAssociativeSearch(elem, param){
+	//默认参数
+	var defaults = {
+		'data': ' ',
+	};
+	//合并参数
+	options = $.extend(true, defaults, param);
+	//获取各种参数
+	data = options.data;
+	//联想搜索框的个数
+	associativeSearchCount = $('.xpy-associative-search-hold').length;
+	//联想搜索html结构
+	var associativeSearchHtml = '<div class="xpy-associative-search-hold" id="xpy-associative-search-hold-'+associativeSearchCount+'">'+
+									'<input type="text" class="xpy-associative-search" placeholder="'+options.placeholder+'">'+
+									'<div class="xpy-associative-camera">'+
+										'<input type="file" title="未选择任何文件">'+
+									'</div>'+
+									'<div class="xpy-associative-search-icon"></div>'+
+									'<ul class="xpy-associative-search-result"></ul>'+
+								'</div>'
+	$(elem).append(associativeSearchHtml);
+	var searchHoldTop = $(elem).outerHeight() - 1 + 'px';
+	$(elem).find('.xpy-associative-search-result').css({'top': searchHoldTop});
+	$(elem).find('.xpy-associative-camera').css({'background': 'url('+options.cameraIcon+') 0 no-repeat'});
+	$(elem).find('.xpy-associative-search-icon').css({'background': '#f10215 url('+options.searchIcon+') center no-repeat'});
+	searchKeywords(elem, param);
+}
+/*
+*输入关键字联想搜索
+*/
+function searchKeywords(elem, param){
+	$(elem).on('input','.xpy-associative-search-hold input',function(){
+		$(elem).find('.xpy-associative-search-result').empty().hide();
+		var value = $.trim($(this).val());
+		if(value){
+			//以输入值为开头的正则表达式
+			var reg = new RegExp('^'+value);
+			for(var i = 0; i < param.data.length; i++){
+				if(reg.test(param.data[i].text)){
+					var resultLi = '<li class="xpy-associative-result-item">'+param.data[i].text+'</li>';
+					$(elem).find('.xpy-associative-search-result').append(resultLi);
+				}
+			}
+			if($(elem).find('.xpy-associative-result-item').length != 0){
+				$(elem).find('.xpy-associative-search-result').show();
+			}
+		}else{
+			$(elem).find('.xpy-associative-search-result').empty().hide;
+		}
+	}).on('focus','.xpy-associative-search-hold input',function(){
+		$(elem).find('.xpy-associative-search-result').empty().hide();
+		var value = $.trim($(this).val());
+		if(value){
+			//以输入值为开头的正则表达式
+			var reg = new RegExp('^'+value);
+			for(var i = 0; i < param.data.length; i++){
+				if(reg.test(param.data[i].text)){
+					var resultLi = '<li class="xpy-associative-result-item">'+param.data[i].text+'</li>';
+					$(elem).find('.xpy-associative-search-result').append(resultLi);
+				}
+			}
+			if($(elem).find('.xpy-associative-result-item').length != 0){
+				$(elem).find('.xpy-associative-search-result').show();
+			}
+		}else{
+			$(elem).find('.xpy-associative-search-result').empty().hide;
+		}
+	})
 	
+	$(elem).on('click','.xpy-associative-search-result .xpy-associative-result-item',function(){
+		$(this).closest('.xpy-associative-search-hold').find('input').eq(0).val($(this).html());
+		$(this).closest('.xpy-associative-search-result').empty().hide();
+	})
+	$(document).on('click',function(e){
+		var $target = e.target;
+		if(!$target.closest('.xpy-associative-search-hold')){
+			$(elem).find('.xpy-associative-search-result').empty().hide();
+		}
+	})
 }
