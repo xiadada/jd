@@ -7,21 +7,115 @@
 		},
 		getStart: function(){
 			$.fn.extend({
+				/*
+				*JD轮播组件
+				*/
 				'carousel': function(param){
 					var elem = this;
 					return openCarousel(elem, param);
 				},
+				/*
+				*JD滑动组件
+				*/
 				'slideMove': function(param){
 					var elem = this;
 					return openSlideMove(elem, param);
 				},
+				/*
+				*JD联想搜索
+				*/
 				'associativeSearch': function(param){
-					var elem = this;
+					elem = this;
 					return openAssociativeSearch(elem, param);
-				}
+				},
+				'associativeSearchFn': function(fnName, content){
+					switch(fnName) {
+						case 'data': 
+							associativeSearchFnApp.data(content);
+							break;
+					}
+				},
+				/*
+				*知乎点击元素出现下拉框组件
+				*/
+				'zhDropMenu': function(param){
+					var elem = this;
+					return openZhDropMenu(elem, param);
+				},
+				/*
+				*知乎提示气泡
+				*/
+				'zhTipBubble': function(param){
+					var elem = this;
+					return openZhTipBubble(elem, param);
+				},
+				/*
+				*下拉选择框
+				*/
+				'dropdown': function(param){
+					var elem = this;
+					console.log(elem);
+					return dropdownMenu(elem, param);
+				},
+			})
+			/*
+			*弹出框
+			*/
+			$.extend({
+				'open': function(param){
+					return openDialog(param);
+				},
+				'close': function(param){
+					closeDialog(param, 'current');
+				},
+				'msg': function(param){
+					return dialogmessage(param);
+				}				
 			})
 		},
 		event: function(){
+			//知乎的点击其他地方，下拉框消失
+			$(document).on('click',function(e){
+				$target = $(e.target);
+				if($target.closest('.popover').length == 1){
+					$('.popover').each(function(i, item){
+						if($(item).context != $target.closest('.popover').context && $(item).hasClass('close')){
+							$(item).removeClass('close').addClass('open');
+						}
+					})
+					return;
+				}
+				if($('.xpy-zhdrop-menu-wrapper').length == 1){
+					$('.xpy-zhdrop-menu-wrapper').remove();
+				}
+				$('.popover').removeClass('close').addClass('open');
+			});
+
+			$(window).resize(function(){
+				resizeDialog();
+			});
+
+			//下拉框位置重置
+			// $(window).resize(function(){
+			// 	resizeDropPosition();
+			// });
+			//点击其他地方，下拉框消失
+			$(document).on('click',function(e){
+				$target = $(e.target);
+				if($target.closest('.dropdown-textbox').length == 1){
+					$('.dropdown-textbox').each(function(i, item){
+						if($(item).context != $target.closest('.dropdown-textbox').context && $(item).hasClass('close')){
+							$(item).removeClass('close').addClass('open');
+						}
+					})
+					return;
+				}
+				if($('.drop-down-menu').length == 1){
+					$('.drop-down-menu').remove();
+				}
+				$('.dropdown-textbox').removeClass('close').addClass('open');
+
+			});
 
 		}
 
@@ -488,7 +582,7 @@ function slideRightMove(elem,param,SlideMoveCount){
 			}
 			flag = true;
 		})
-	}	
+	}
 }
 
 
@@ -531,13 +625,96 @@ function slideLeftMove(elem,param,SlideMoveCount){
 			}
 			flag = true;
 		})
-	}	
+	}
 }
 
 /*
 *渲染联想搜索框结构
 */
 function openAssociativeSearch(elem, param){
+	//默认参数
+	var defaults = {
+		'data': [],
+		"cameraIcon": "",
+		"searchIcon": "",
+		"placeholder": ""
+	};
+	//合并参数
+	options = $.extend(true, defaults, param);
+	//获取各种参数
+	// data = options.data;
+	//联想搜索框的个数
+	associativeSearchCount = $('.xpy-associative-search-hold').length;
+	//联想搜索html结构
+	var associativeSearchHtml = '<div class="xpy-associative-search-hold" id="xpy-associative-search-hold-'+associativeSearchCount+'">'+
+									'<input type="text" class="xpy-associative-search" placeholder="'+options.placeholder+'">'+
+									'<div class="xpy-associative-camera">'+
+										'<input type="file" title="未选择任何文件">'+
+									'</div>'+
+									'<div class="xpy-associative-search-icon">'+options.searchIcon+'</div>'+
+									'<ul class="xpy-associative-search-result"></ul>'+
+								'</div>'
+	$(elem).append(associativeSearchHtml);
+	var searchHoldTop = $(elem).find('.xpy-associative-search-hold').outerHeight() - 1 + 'px';
+	$(elem).find('.xpy-associative-search-result').css({'top': searchHoldTop});
+	$('.xpy-associative-camera').css({'background': 'url("'+options.cameraIcon+'") 0 no-repeat'});
+	$('.xpy-associative-search-icon').css({'background': '#f10215 url("'+options.searchIcon+'") center no-repeat'})
+}
+var associativeSearchFnApp = {
+	data: function(content){
+		options.data = content;
+		searchKeywords(elem, options);
+		allEvent(elem,options);
+	}
+}
+/*
+*输入关键字联想搜索
+*/
+function searchKeywords(elem, param){
+	$(elem).find('.xpy-associative-search-result').empty().hide();
+	value = $.trim($('input[type="text"]').val());
+	if(value){
+		for(var i = 0; i < param.data.length; i++){
+			var resultLi = '<li class="xpy-associative-result-item">'+param.data[i]+'</li>';
+			$(elem).find('.xpy-associative-search-result').append(resultLi);
+		}
+		if($(elem).find('.xpy-associative-result-item').length != 0){
+			$(elem).find('.xpy-associative-search-result').show();
+		}
+	}else{
+		$(elem).find('.xpy-associative-search-result').empty().hide;
+	}	
+}
+//各种事件
+function allEvent(elem,param){
+	$(elem).on('focus','.xpy-associative-search-hold input',function(){
+		$(elem).find('.xpy-associative-search-result').empty().hide();
+		var value = $.trim($(this).val());
+		if(value){
+			for(var i = 0; i < param.data.length; i++){
+				var resultLi = '<li class="xpy-associative-result-item">'+param.data[i]+'</li>';
+				$(elem).find('.xpy-associative-search-result').append(resultLi);
+			}
+			if($(elem).find('.xpy-associative-result-item').length != 0){
+				$(elem).find('.xpy-associative-search-result').show();
+			}
+		}else{
+			$(elem).find('.xpy-associative-search-result').empty().hide;
+		}
+	})
+	
+	$(elem).on('click','.xpy-associative-search-result .xpy-associative-result-item',function(){
+		$(this).closest('.xpy-associative-search-hold').find('input').eq(0).val($(this).html());
+		$(this).closest('.xpy-associative-search-result').empty().hide();
+	})
+	$(document).on('click',function(e){
+		var $target = e.target;
+		if(!$target.closest('.xpy-associative-search-hold')){
+			$(elem).find('.xpy-associative-search-result').empty().hide();
+		}
+	})
+}
+/*function openAssociativeSearch(elem, param){
 	//默认参数
 	var defaults = {
 		'data': ' ',
@@ -563,11 +740,11 @@ function openAssociativeSearch(elem, param){
 	$(elem).find('.xpy-associative-camera').css({'background': 'url('+options.cameraIcon+') 0 no-repeat'});
 	$(elem).find('.xpy-associative-search-icon').css({'background': '#f10215 url('+options.searchIcon+') center no-repeat'});
 	searchKeywords(elem, param);
-}
+}*/
 /*
 *输入关键字联想搜索
 */
-function searchKeywords(elem, param){
+/*function searchKeywords(elem, param){
 	$(elem).on('input','.xpy-associative-search-hold input',function(){
 		$(elem).find('.xpy-associative-search-result').empty().hide();
 		var value = $.trim($(this).val());
@@ -615,5 +792,299 @@ function searchKeywords(elem, param){
 		if(!$target.closest('.xpy-associative-search-hold')){
 			$(elem).find('.xpy-associative-search-result').empty().hide();
 		}
+	})
+}*/
+/*
+*渲染知乎点击元素出现下拉框结构
+*/
+function openZhDropMenu(elem, param){
+	//默认参数
+	var defaults = {
+	};
+	//合并参数
+	var options = $.extend(true, defaults, param);
+	//获取各种参数
+	var area = options.area;
+	//知乎弹出框的个数
+	zhDropMenuCount = $('.xpy-zhdrop-menu-wrapper').length;
+	//知乎弹出框html结构
+	var zhDropMenuHtml = '<div class="xpy-zhdrop-menu-wrapper xpy-zhdrop-menu-wrapper'+zhDropMenuCount+'">'+
+							'<div class="xpy-zhdrop-menu-dot"></div>'+
+							'<div class="xpy-zhdrop-menu-content">'+options.content+'</div>'+
+						'</div>'
+	$(elem).addClass('open').addClass('popover');
+	$(elem).on('click',function(){
+		var that = this;
+		if($(that).hasClass('open')){
+			$(that).removeClass('open').addClass('close');
+			$('.xpy-zhdrop-menu-wrapper').remove();
+			$('body').append(zhDropMenuHtml);
+			$('.xpy-zhdrop-menu-wrapper').width(options.area[0]);
+			$('.xpy-zhdrop-menu-wrapper').height(options.area[1]);
+			var top = $(that).offset().top +$(that).outerHeight(),
+			left = $(that).offset().left- ($('.xpy-zhdrop-menu-wrapper').outerWidth() -$(that).outerWidth()) / 2;
+			$('.xpy-zhdrop-menu-wrapper').css({
+				'top': top,
+				'left': left
+			})	
+			$(window).resize(function() {
+				var top = $(that).offset().top +$(that).outerHeight(),
+				left = $(that).offset().left- ($('.xpy-zhdrop-menu-wrapper').outerWidth() -$(that).outerWidth()) / 2;
+				$('.xpy-zhdrop-menu-wrapper').css({
+					'top': top,
+					'left': left
+				})	
+			});
+			options.success && options.success();
+			//点击下拉框，下拉框不消失
+			$('.xpy-zhdrop-menu-wrapper').on('click',function(e){
+				e.stopPropagation();
+			})
+		}else{
+			$(that).removeClass('close').addClass('open');
+			$('.xpy-zhdrop-menu-wrapper').remove();
+			options.success && options.success();
+		}
+
+	})
+}
+
+/*
+*渲染知乎提示气泡结构
+*/
+function openZhTipBubble(elem, param){
+	//默认参数
+	var defaults = {
+	};
+	//合并参数
+	options = $.extend(true, defaults, param);
+	//知乎提示气泡的个数
+	zhTipBubbleCount = $('.xpy-zhtip-bubble-wrapper').length;
+	//知乎提示气泡html结构
+	var zhTipBubbleHtml = '<div class="xpy-zhtip-bubble-wrapper xpy-zhtip-bubble-wrapper'+zhTipBubbleCount+'">'+
+								'<div class="xpy-zhtip-bubble-dot"></div>'+
+								'<div class="xpy-zhtip-bubble-content">'+options.content+'</div>'+
+						'</div>';
+	$(elem).on('mouseenter',function(){
+		var that = this;
+		$('body').append(zhTipBubbleHtml);
+		var top = $(that).offset().top +$(that).outerHeight(),
+			left = $(that).offset().left- ($('.xpy-zhtip-bubble-wrapper').outerWidth() -$(that).outerWidth()) / 2;
+		$('.xpy-zhtip-bubble-wrapper').css({
+			'top': top,
+			'left': left
+		})	
+		$(window).resize(function() {
+			var top = $(that).offset().top +$(that).outerHeight(),
+			left = $(that).offset().left- ($('.xpy-zhtip-bubble-wrapper').outerWidth() -$(that).outerWidth()) / 2;
+			$('xpy-zhtip-bubble-wrapper').css({
+				'top': top,
+				'left': left
+			})	
+		});			
+	}).on('mouseleave',function(){
+		$('.xpy-zhtip-bubble-wrapper').remove();
+	})
+}
+/*
+*下拉选择框组件
+*/
+function dropdownMenu(elem, param){
+	//默认参数
+	var defaults = {
+		'data': [],
+		'placeholder': '',
+		'width': 'auto'
+	}
+	//合并参数
+	var option = $.extend(true, defaults, param);
+	//获取到各种参数
+	var data = option.data,
+		placeholder = option.placeholder,
+		width = option.width;
+	//触发框的个数
+	var dropdownCount = $('.dropdown-textbox').length;
+	//下拉触发的文本框
+	var dropDownTextBoxhtml = "";
+	//文本选择内容框
+	var itemHtml = '';
+	var listItemHtml = '';
+	var selectedText,
+		selectedVal =placeholder,
+		selectedComment;
+	var _selectedFlag = true;
+	for(var i = 0; i < data.length; i++){
+		if(data[i].selected && _selectedFlag){
+			selectedText = data[i].text;
+			selectedVal = data[i].value;
+			selectedComment = data[i].comment;
+			_selectedFlag = false;
+		}
+		itemHtml += '<li class = "drop-down-item" data-value = "'+data[i].value+'" data-comment = "'+data[i].comment+'" >'+data[i].text+'</li>';
+	}
+	// $(listItemHtml).append(itemHtml);
+	dropDownTextBoxhtml = '<div class="dropdown-textbox'+dropdownCount+' dropdown-textbox open" style="width: '+width+'">'+
+								'<span class="select-value">'+selectedVal+'</span>'+
+								'<span class="drop-icon"></span>'+
+					       '</div>';
+	$(elem).append(dropDownTextBoxhtml);
+	$triggerArea = $(elem).children('.dropdown-textbox');
+	listItemHtml = '<ul class="drop-down-menu'+dropdownCount+' drop-down-menu" style = "width: '+($('.dropdown-textbox').width()+12)+'px">'+itemHtml+'</ul>';
+	//下拉框展示收起
+	$triggerArea.on('click',function(e){
+		var that = this;
+		if($(that).hasClass('open')){
+			$(that).removeClass('open').addClass('close');
+			$('.drop-down-menu').remove();
+			$('body').append(listItemHtml);
+			// resizeDropPosition();
+			var top = $(that).offset().top +$(that).outerHeight(),
+			left = $(that).offset().left;
+			$('.drop-down-menu').css({
+				'top': top,
+				'left': left
+			})	
+			$(window).resize(function() {
+				var top = $(that).offset().top +$(that).outerHeight(),
+				left = $(that).offset().left;
+				$('.drop-down-menu').css({
+					'top': top,
+					'left': left
+				})	
+			});			
+			//下拉框选择
+			$('.drop-down-item').on('click',function(e){
+				e.stopPropagation();
+				var selectValue = $(this).data('value');
+				$(that).find('.select-value').html(selectValue);
+				$('.drop-down-menu').remove();
+				$(that).removeClass('close').addClass('open');
+			})
+		}else{
+			$(that).removeClass('close').addClass('open');
+			$('.drop-down-menu').remove();
+		}
+	});		
+}
+/*
+*弹窗组件
+*/
+function openDialog(param){
+	// 默认参数
+	var defaults = {
+		'title': '弹窗',
+		'area': 'auto',
+		'btn': '确认',
+		'content': ''
+	}
+
+	// 合并参数
+	var options = $.extend(true, defaults, param);
+	// 拿到这种参数
+	var title = options.title,
+		area = options.area,
+		btn = options.btn,
+		content = options.content;
+	//得到弹窗的总的数量
+	var dialogCount = $('.xpy-dialog').length;
+	// 弹出遮罩层
+	var shadeHtml = '<div id="xpyui-layer-shade'+dialogCount+'" class="xpyui-layer-shade" style="z-index:100; background-color:rgba(0,0,0,.6);filter:alpha(opacity=30);"></div>';
+	//弹窗按钮
+	var btnHtml = '';
+	for(var i = 0; i < param.btn.length; i++){
+		btnHtml += '<button class="btn btn' + i +'">'+btn[i]+'</button>'
+	}
+	//计算弹窗的位置和内容区域的高度，弹窗居中放置
+	var clientWidth = document.documentElement.clientWidth||document.body.clientWidth,
+		clientHeight = document.documentElement.clientHeight||document.body.clientHeight;
+	var top = (clientHeight - parseInt(area[0])) / 2 + 'px',
+		left = (clientWidth - parseInt(area[1])) / 2 + 'px';
+	var contentHeight = (parseInt(area[1]) - 60) + 'px'; 
+	// 弹出弹窗
+	var dialogHtml = '';
+	dialogHtml +='<div class="xpy-dialog" id="xpy-dialog'+dialogCount+'" style="z-index: 1000; width: '+area[0]+'; height: '+area[1]+'; top: '+ top +'; left: '+ left +'">'+
+					'<div class="dialog-title">'+ title +'</div>'+
+					'<div class="dialog-content" style = "height: '+contentHeight+'">'+content+'</div>'+
+					'<div class="dialog-btn">'+ btnHtml +'</div>'+ 	
+	 			'</div>';
+	$('body').append(shadeHtml).append(dialogHtml);
+	//弹窗位置	
+	resizeDialog();
+	param.success && param.success(dialogCount);
+
+	//禁止页面向下滚动
+	$('body').css({'position': 'fixed','overflow': 'hidden'})
+	$('body').on('scroll',function(event){
+        event.preventDefault;
+    }, false)
+	
+	// 绑定按钮事件
+	$('.dialog-btn').on('click', 'button', function(){
+		var _index = $(this).index()+1;
+		var btn = 'btn' + _index;
+		if(typeof options[btn] == 'function'){
+			options[btn]();
+		}else{
+			if(_index === 1 || _index === 2){
+			
+			}
+		}
+	})
+	return dialogCount;
+}
+//关闭弹窗事件
+function closeDialog(index, type){
+	if(type == 'current'){
+		$('#xpy-dialog'+index).remove();
+		$('#xpyui-layer-shade'+index).remove();
+	}else if(type == 'all'){
+		$('.xpy-dialog').remove();
+		$('.xpyui-layer-shade').remove();
+	}
+	//页面恢复滚动事件
+	$('body').css({'position': '','overflow': ''});
+	$('body').off('scroll');
+}
+
+//信息弹出框
+function dialogmessage(param){
+	//默认参数
+	var defaults = ({
+		message: '恭喜，创建成功',
+		icon: ''
+	});
+	//合并参数
+	var options = $.extend(true, defaults, param);
+	//获取到参数
+	var messageText = options.message,
+		icon = options.icon;
+	//弹出信息
+	var messageHtml = '';
+	messageHtml = '<div class="message-container">'+
+					  '<div class="icon-detail">'+options.icon+'</div>'+
+					  '<div class="text-detail">'+messageText+'</div>'+
+				  '</div>';
+	$('body').append(messageHtml);	
+	//弹出信息居中放置
+	resizeDialog();
+	setTimeout(function(){
+		$('.message-container').remove();
+	},2000)
+}
+//弹窗位置
+function resizeDialog(){
+	var clientHeight = document.documentElement.clientHeight,
+		clientWidth = document.documentElement.clientWidth;
+	var $dialogArea = $('.xpy-dialog');
+	$.each($dialogArea, function(i, item){
+		var $currentDialog = $dialogArea.eq(i);
+		$currentDialog.css({
+			'top': (clientHeight - $currentDialog.height()) / 2 + 'px',
+			'left': (clientWidth - $currentDialog.width()) / 2 + 'px'
+		})
+	})
+	$('.message-container').css({
+		'top': (clientHeight - $('.message-container').outerHeight()) / 2 + 'px',
+		'left': (clientWidth - $('.message-container').outerWidth()) /2 + 'px'
 	})
 }
